@@ -80,12 +80,9 @@ class AnalyticsPostThread(threading.Thread):
 
     def run(self):
         while True:
-            # grabs host from queue
-            try:
-                data_dict = self.queue.get(block=True, timeout=5)
-            except Queue.Empty:
-                break
-
+            if self.queue.empty():
+                break;
+            data_dict = self.queue.get(block=True, timeout=5)
             data = urllib.urlencode(data_dict)
             log.debug("Sending API event to Google Analytics: " + data)
             # send analytics
